@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status        #contains a list of HTTP Status response like 404, 505, 400
 
 from . import serializers
+from . import models
 
 
 # Create your views here.
@@ -106,3 +107,8 @@ class HelloViewSet(viewsets.ViewSet):
 
         return Response({'http_method':'DELETE'})
 
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handles creating, reading and updating profiles."""
+
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()     #for listing out all the objects in the database

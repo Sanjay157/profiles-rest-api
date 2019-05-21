@@ -66,4 +66,3 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         #Django uses it when it needs to convert the object to string
         return self.email
 
-    

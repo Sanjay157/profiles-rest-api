@@ -5,10 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status        #contains a list of HTTP Status response like 404, 505, 400
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
 
 from . import serializers
 from . import models
 from . import permissions
+
 
 
 # Create your views here.
@@ -117,4 +119,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)  
     """ , is required after TokenAuthentication for the python to know this
         has to created as a Tuple(list which is immutable(can't be changed once set))"""
-    permission_classes = (permissions.UpdateOwnProfile,)                                             
+    permission_classes = (permissions.UpdateOwnProfile,)       
+    filter_backends = (filters.SearchFilter,)
+    search_fields =('name','email',)                                      

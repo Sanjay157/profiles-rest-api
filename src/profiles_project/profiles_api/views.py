@@ -8,6 +8,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
 from rest_framework.authtoken.serializers import AuthTokenSerializer 
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticatedOrReadOnly #This will fix errors like creating a new Status item when we aren't logged in.
+from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from . import models
@@ -120,7 +122,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()     #for listing out all the objects in the database
     authentication_classes = (TokenAuthentication,)  
     """ , is required after TokenAuthentication for the python to know this
-        has to created as a Tuple(list which is immutable(can't be changed once set))"""
+        has to be created as a Tuple(list which is immutable(can't be changed once set))"""
     permission_classes = (permissions.UpdateOwnProfile,)       
     filter_backends = (filters.SearchFilter,)
     search_fields =('name','email',)                                      
@@ -135,3 +137,18 @@ class LoginViewSet(viewsets.ViewSet):
         """Use the ObtainAuthToken APIView to validate and create a token."""
 
         return ObtainAuthToken().post(request)
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating, deleting and updating User Profiles"""
+
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.PostOwnStatus, IsAuthenticated)    
+
+    def perform_create(self, serializer):           #to give access to the current logged in user
+        """Sets the user profile to logged in user."""
+
+        serializer.save(user_profile=self.request.user)
+
+

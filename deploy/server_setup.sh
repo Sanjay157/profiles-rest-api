@@ -10,6 +10,7 @@ VIRTUALENV_BASE_PATH='/usr/local/virtualenvs'
 
 # Set Ubuntu Language
 locale-gen en_GB.UTF-8
+#Testing
 
 # Install Python, SQLite and pip
 echo "Installing dependencies..."
